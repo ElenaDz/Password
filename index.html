@@ -38,35 +38,37 @@
     $meter.attr('low', complexityMin);
     $meter.attr('high', complexityMiddle);
 
-    $input.on('keyup', (event) => {
-        let length = $input.val().length;
-        balls = length;
-        let inputVal = $input.val();
-
-        $meter.css({'visibility': 'visible'});
-        function complexityPass() {
-            const regexWord = /([A-Z])/g;
-            if (inputVal.match(regexWord) !== null) {
-                balls = balls + 1;
-            }
-            const regexSimvol = /\W/g;
-            if (inputVal.match(regexSimvol) !== null) {
-                balls = balls + 1;
-            }
-            const regexWandD = /[0-9]/g;
-            if (inputVal.match(regexWandD) !== null) {
-                balls = balls + 1;
-            }
+    function complexityPass(inputVal) {
+        let length = inputVal.length;
+        let balls = length;
+        const regexWord = /([A-Z])/g;
+        if (inputVal.match(regexWord) !== null) {
+            balls = balls + 1;
         }
+        const regexSimvol = /\W/g;
+        if (inputVal.match(regexSimvol) !== null) {
+            balls = balls + 1;
+        }
+        const regexWandD = /[0-9]/g;
+        if (inputVal.match(regexWandD) !== null) {
+            balls = balls + 1;
+        }
+        return balls
+    }
 
-        complexityPass(inputVal);
-        $meter.val(balls);
-                // console.assert(complexityPass('Qwerty123%') === 13, inputVal = balls);
-
+    $input.on('keyup', (event) => {
+        let inputVal = $input.val();
+        $meter.css({'visibility': 'visible'});
+        $meter.val(complexityPass(inputVal));
+        console.log(complexityPass(inputVal));
     })
 
+    console.assert(complexityPass('Qwerty123%') === 14, 'Qwerty123% = ' + complexityPass('Qwerty123%'));
+    console.assert(complexityPass('Q') === 2, 'Q = ' + complexityPass('Q'));
+    console.assert(complexityPass('wE') === 3, 'wE = ' + complexityPass('wE'));
+    console.assert(complexityPass('d!') === 3, 'd! = ' + complexityPass('d!'));
+    console.assert(complexityPass('fgh') === 3, 'fgh = ' + complexityPass('fgh'));
+
 </script>
-
-
 </body>
 </html>
