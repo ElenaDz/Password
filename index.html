@@ -11,14 +11,17 @@
           rel="stylesheet">
 </head>
 <body>
+<!-- fixme внутри body должне быть отступ у всего внутреннего содержания -->
 <div class="box">
     <form>
         <label>
+            <!-- fixme форматирование -->
                 <span>
                     Введите пароль:
                 </span>
             <input type="password" name="pass" data="complexity_check" data-complexity_min="8"
                    data-complexity_middle="12">
+            <!-- fixme meter должен добавляться программно -->
             <meter min="0" max="25" low="6" high="4" value="11"></meter>
         </label>
         <button type="submit">Отправить</button>
@@ -30,7 +33,11 @@
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+    // fixme нет автокомплита для jquery
+
+    // fixme мы добавляем проверку пароля не для всех полей пароль а только для тех у кого есть атрибут complexity_check
     let $input = $('Input[type=password]');
+    // fixme эта переменная подсвечивается ide как не используемая убери ее
     let balls = 0;
     let $meter = $('meter');
     let complexityMin = $input.data('complexity_min');
@@ -38,9 +45,11 @@
     $meter.attr('low', complexityMin);
     $meter.attr('high', complexityMiddle);
 
+    // fixme не правильное имя аргумента там пароль а не значение input
     function complexityPass(inputVal) {
         let length = inputVal.length;
         let balls = length;
+        // мне нравиться что ты завела здесь переменные, имя переменной подсказывает что это за регулярное выражение
         const regexWord = /([A-Z])/g;
         if (inputVal.match(regexWord) !== null) {
             balls = balls + 1;
@@ -56,18 +65,26 @@
         return balls
     }
 
+    // fixme event не используется
     $input.on('keyup', (event) => {
         let inputVal = $input.val();
         $meter.css({'visibility': 'visible'});
         $meter.val(complexityPass(inputVal));
         console.log(complexityPass(inputVal));
-    })
+    });
 
+    // fixme не проходит
     console.assert(complexityPass('Qwerty123%') === 14, 'Qwerty123% = ' + complexityPass('Qwerty123%'));
+
+	// fixme Тест пишуться не так, правильно так console.assert(1+1===3, '1+1=3'), первый аргумент это проверяемая строка,
+	// а второй текстовоя строка которая поможет нам быстро найти текст который сломался, а у тебя сейчас строка в console log и здесь разные, а должны быть одинаковые
     console.assert(complexityPass('Q') === 2, 'Q = ' + complexityPass('Q'));
     console.assert(complexityPass('wE') === 3, 'wE = ' + complexityPass('wE'));
     console.assert(complexityPass('d!') === 3, 'd! = ' + complexityPass('d!'));
     console.assert(complexityPass('fgh') === 3, 'fgh = ' + complexityPass('fgh'));
+
+    // тут нет совместного использования цифр и букв поэтому сложность 1 а не 2
+    console.assert(complexityPass('1') === 1, '1 = 1');
 
 </script>
 </body>
