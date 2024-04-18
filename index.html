@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Введите пароль</title>
+    <link rel="stylesheet" href="css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+<div class="box">
+    <form>
+        <label>
+                <span>
+                    Введите пароль:
+                </span>
+            <input type="password" name="pass" data="complexity_check" data-complexity_min="8"
+                   data-complexity_middle="12">
+            <meter min="0" max="25" low="6" high="4" value="11"></meter>
+        </label>
+        <button type="submit">Отправить</button>
+    </form>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    let $input = $('Input[type=password]');
+    let balls = 0;
+    let $meter = $('meter');
+    let complexityMin = $input.data('complexity_min');
+    let complexityMiddle = $input.data('complexity_middle');
+    $meter.attr('low', complexityMin);
+    $meter.attr('high', complexityMiddle);
+
+    $input.on('keyup', (event) => {
+        let length = $input.val().length;
+        balls = length;
+        let inputVal = $input.val();
+
+        $meter.css({'visibility': 'visible'});
+        function complexityPass() {
+            const regexWord = /([A-Z])/g;
+            if (inputVal.match(regexWord) !== null) {
+                balls = balls + 1;
+            }
+            const regexSimvol = /\W/g;
+            if (inputVal.match(regexSimvol) !== null) {
+                balls = balls + 1;
+            }
+            const regexWandD = /[0-9]/g;
+            if (inputVal.match(regexWandD) !== null) {
+                balls = balls + 1;
+            }
+        }
+
+        complexityPass(inputVal);
+        $meter.val(balls);
+                // console.assert(complexityPass('Qwerty123%') === 13, inputVal = balls);
+
+    })
+
+</script>
+
+
+</body>
+</html>
