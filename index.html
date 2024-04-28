@@ -11,15 +11,16 @@
           rel="stylesheet">
 </head>
 <body>
-<!-- fixme внутри body должне быть отступ у всего внутреннего содержания  ok-->
+<!-- fixme внутри body должне быть отступ у всего внутреннего содержания -->
 <div class="box">
     <form>
         <div class="password_block">
             <label>
-                <!-- fixme форматирование ok-->
+                <!-- fixme форматирование -->
                 <span>
                 Введите пароль:
             </span>
+                <!-- fixme не корректно data="complexity_check" правильно data-complexity_check="1" -->
                 <input
                         required
                         type="password"
@@ -27,7 +28,7 @@
                         data="complexity_check"
                         data-complexity_min="8"
                         data-complexity_middle="12">
-                <!-- fixme meter должен добавляться программно ok-->
+                <!-- fixme meter должен добавляться программно, здесь его быть не должно, удалить -->
                 <meter min="0" max="25" value="11"></meter>
             </label>
             <button type="submit">
@@ -38,7 +39,7 @@
     <form>
         <div class="password_block">
             <label>
-                <!-- fixme форматирование ok-->
+                <!-- fixme форматирование -->
                 <span>
                 Введите пароль:
             </span>
@@ -46,10 +47,9 @@
                         required
                         type="password"
                         name="pass"
-                        data="complexity_check"
                         data-complexity_min="8"
                         data-complexity_middle="12">
-                <!-- fixme meter должен добавляться программно ok-->
+                <!-- fixme meter должен добавляться программно, здесь его быть не должно, удалить -->
                 <meter min="0" max="25" value="11"></meter>
             </label>
             <button type="submit">
@@ -64,26 +64,33 @@
         integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    // fixme нет автокомплита для jquery OK
-
+    // fixme нас не интересуют ни какие блоки password_block, нас интересуют только поля ввода пороля у которых есть парамент data-complexity_check
     let $blocksPass = $('.password_block');
 
-    // fixme не правильное имя аргумента там пароль а не значение input ok
-    function complexityPass(password) {
+    // fixme переименовать функцию, функции должны буть глаголом, тоесть отвечать на вопрос "что делает", здесь подойдет имя getComplexityPass
+    // fixme используется два разных имени для одного и того же pass и password, не допустимо
+    function complexityPass(password)
+    // fixme открывающаяся скобка должна быть на новой строке, если внутри скобок больше чем одна строчка, здесь я исправил, исправь дальше сама чтобы я понял, что ты поняла
+    {
         let length = password.length;
         let balls = length;
-        // мне нравиться что ты завела здесь переменные, имя переменной подсказывает что это за регулярное выражение
 
+        // fixme используй реально существующие слова для именования, слова bletter не существует
         const regexBletter = /([A-Z])/g;
         if (password.match(regexBletter) !== null) {
             balls = balls + 1;
         }
+
+		// fixme используй реально существующие слова для именования, слова simvol не существует
         const regexSimvol = /\W/g;
         if (password.match(regexSimvol) !== null) {
             balls = balls + 1;
         }
+
+        // fixme для имен переменных используется верблюжья нотация, пример "имяПеременнойНовой"
         const regexletter = /[A-Za-z]/g;
         const regexnumber = /[0-9]/g;
+        // fixme не используй вложенные if без необходимости, здесь подошел бы оператор "и" (&&) для двух условий и код стал бы на много легче читаться
         if (password.match(regexletter) !== null) {
             if (password.match(regexnumber) !== null) {
                 balls = balls + 1;
@@ -92,25 +99,27 @@
         return balls;
     }
 
-    // fixme event не используется OK
     $blocksPass.each((index, element) => {
         let $blockPass = $(element);
-        // fixme мы добавляем проверку пароля не для всех полей пароль а только для тех у кого есть атрибут complexity_check ok
         let $input = $blockPass.find('Input[data="complexity_check"]');
-        // fixme эта переменная подсвечивается ide как не используемая убери ее OK
         let $meter = $blockPass.find('meter');
         let complexityMin = $input.data('complexity_min');
         let complexityMiddle = $input.data('complexity_middle');
+
         $meter.attr('low', complexityMin);
         $meter.attr('high', complexityMiddle);
+
         let balls = 0;
         let inputPass = null;
 
         $input.on('keyup', (event) => {
             inputPass = event.currentTarget;
+
             let inputVal = $input.val();
-            $meter.css({'visibility': 'visible'});
+
+            $meter.css({visibility: 'visible'});
             balls = complexityPass(inputVal);
+            // fixme val подчеркнивает phpstorm, все такие вещи нужно исправлять
             $meter.val(balls);
             if (balls < $meter.attr('low')) {
                 inputPass.setCustomValidity('Слабый пароль');
@@ -119,7 +128,7 @@
             }
         });
     });
-    // fixme не проходит OK
+
     console.assert(complexityPass('Qwerty123%') === 13, complexityPass('Qwerty123%') + ' = 13');
 
     // fixme Тест пишуться не так, правильно так console.assert(1+1===3, '1+1=3'), первый аргумент это проверяемая строка,
@@ -130,7 +139,6 @@
     console.assert(complexityPass('fgh') === 3, complexityPass('fgh') + ' = 3');
     console.assert(complexityPass('12f') === 4, complexityPass('12f') + ' = 4');
 
-    // тут нет совместного использования цифр и букв поэтому сложность 1 а не 2 (исправила)
     console.assert(complexityPass('1') === 1, '1 = 1');
 
 </script>
