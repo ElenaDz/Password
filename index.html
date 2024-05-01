@@ -105,14 +105,14 @@
             });
         });
 
-        console.assert(getComplexityPassword('Qwerty123%') === 13, getComplexityPassword('Qwerty123%') + ' = 13');
+        console.assert(getComplexityPassword('Qwerty123%') === 13, 'Qwerty123% сложность 13');
         // fixme Тест пишуться не так, правильно так console.assert(1+1===3, '1+1=3'), первый аргумент это проверяемая строка, ok
         // а второй текстовоя строка которая поможет нам быстро найти текст который сломался, а у тебя сейчас строка в console log и здесь разные, а должны быть одинаковые
-        console.assert(getComplexityPassword('Q') === 2, getComplexityPassword('Q') + ' = 2');
-        console.assert(getComplexityPassword('wE') === 3, getComplexityPassword('wE') + ' = 3');
-        console.assert(getComplexityPassword('d!') === 3, getComplexityPassword('d!') + ' = 3');
-        console.assert(getComplexityPassword('fgh') === 3, getComplexityPassword('fgh') + ' = 3');
-        console.assert(getComplexityPassword('12f') === 4, getComplexityPassword('12f') + ' = 4');
+        console.assert(getComplexityPassword('Q') === 2, 'Q сложность 2');
+        console.assert(getComplexityPassword('wE') === 3, 'wE сложность 3');
+        console.assert(getComplexityPassword('d!') === 3, 'd! сложность  3');
+        console.assert(getComplexityPassword('fgh') === 3, 'fgh сложность 3');
+        console.assert(getComplexityPassword('12f') === 4, '12f сложность 4');
         console.assert(getComplexityPassword('1') === 1, '1 = 1');
 
     </script>
