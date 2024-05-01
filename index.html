@@ -81,10 +81,7 @@
             let complexityMiddle = $input.data('complexity_middle');
             $input
                 .parent()
-                .append(
-                    '<meter min=\"0\" low=' + complexityMin + ' high=' + complexityMiddle +' max=\"25\" value=\"11\">' +
-                    '</meter>'
-                )
+                .append(`<meter min="0" low=${complexityMin} high=${complexityMiddle} max="25" value="11"></meter>`)
             let $meter = $input.parent().find('meter');
             let balls = 0;
             let inputPassword = null;
