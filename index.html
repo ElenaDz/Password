@@ -11,24 +11,21 @@
           rel="stylesheet">
 </head>
 <body>
-<!-- fixme внутри body должне быть отступ у всего внутреннего содержания OK-->
     <div class="box">
         <form>
             <div class="password_block">
                 <label>
-                    <!-- fixme форматирование OK-->
                     <span>
-                            Введите пароль:
+                        Введите пароль:
                     </span>
-                    <!-- fixme не корректно data="complexity_check" правильно data-complexity_check="1" ok-->
+                    <!-- fixme complexity_min и complexity_middle могут быть не указаны, на этот случай нужно задать значния по-умолчанию -->
                     <input
-                            required
-                            type="password"
-                            name="pass"
-                            data-complexity_check="1"
-                            data-complexity_min="8"
-                            data-complexity_middle="12">
-                    <!-- fixme meter должен добавляться программно, здесь его быть не должно, удалить ok-->
+                        required
+                        type="password"
+                        name="pass"
+                        data-complexity_check="1"
+                        data-complexity_min="2"
+                        data-complexity_middle="12">
                 </label>
                 <button type="submit">
                     Отправить
@@ -42,32 +39,26 @@
             integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        // fixme нас не интересуют ни какие блоки password_block, нас интересуют только поля ввода пороля у которых есть парамент data-complexity_check ok
         let $inputsPassword = $('Input[data-complexity_check="1"]');
 
-        // fixme переименовать функцию, функции должны буть глаголом, тоесть отвечать на вопрос "что делает", здесь подойдет имя getComplexityPass ok
-        // fixme используется два разных имени для одного и того же pass и password, не допустимо ok
+        // todo размести тесты рядом с этой функцией, чтобы не потяреляись, вдруг будешь выносить фукнцию в другой файл, про тексты точно забудешь
         function getComplexityPassword(password)
-        // fixme открывающаяся скобка должна быть на новой строке, если внутри скобок больше чем одна строчка, здесь я исправил, исправь дальше сама чтобы я понял, что ты поняла ok
         {
             let balls = password.length;
 
-            // fixme используй реально существующие слова для именования, слова bletter не существует ok
+            // fixme большие буквы в программировании называет верхний регист по английске upper case, переименную
             const regexCapitalLetter = /([A-Z])/g;
             if (password.match(regexCapitalLetter) !== null) {
                 balls = balls + 1;
             }
 
-            // fixme используй реально существующие слова для именования, слова simvol не существует ok
             const regexSymbol = /\W/g;
             if (password.match(regexSymbol) !== null) {
                 balls = balls + 1;
             }
 
-            // fixme для имен переменных используется верблюжья нотация, пример "имяПеременнойНовой" ok
             const regexLetters = /[A-Za-z]/g;
             const regexNumber = /[0-9]/g;
-            // fixme не используй вложенные if без необходимости, здесь подошел бы оператор "и" (&&) для двух условий и код стал бы на много легче читаться ok
             if (password.match(regexLetters) !== null && password.match(regexNumber) !== null) {
                 balls = balls + 1;
             }
@@ -81,7 +72,10 @@
             let complexityMiddle = $input.data('complexity_middle');
             $input
                 .parent()
-                .append(`<meter min="0" low=${complexityMin} high=${complexityMiddle} max="25" value="11"></meter>`)
+                // fixme max не может быть фиксированным он должен рачитываться в зависимости от high например high + 10
+                .append(`<meter min="0" low=${complexityMin} high=${complexityMiddle} max="25"></meter>`);
+
+            // если блок кода с объявлением переменных и констант соседсвует с другим кодом его нужно отделать пустыми строками, как здесь, исправь в других местах
             let $meter = $input.parent().find('meter');
             let balls = 0;
             let inputPassword = null;
@@ -92,7 +86,6 @@
                 let inputVal = $input.val();
                 $meter.css({visibility: 'visible'});
                 balls = getComplexityPassword(inputVal);
-                // fixme val подчеркнивает phpstorm, все такие вещи нужно исправлять ok
                 $meter.val(String(balls));
                 if (balls < $meter.attr('low')) {
                     inputPassword.setCustomValidity('Слабый пароль');
@@ -102,16 +95,19 @@
             });
         });
 
-        console.assert(getComplexityPassword('Qwerty123%') === 13, 'Qwerty123% сложность 13');
-        // fixme Тест пишуться не так, правильно так console.assert(1+1===3, '1+1=3'), первый аргумент это проверяемая строка, ok
-        // а второй текстовоя строка которая поможет нам быстро найти текст который сломался, а у тебя сейчас строка в console log и здесь разные, а должны быть одинаковые
-        console.assert(getComplexityPassword('Q') === 2, 'Q сложность 2');
-        console.assert(getComplexityPassword('wE') === 3, 'wE сложность 3');
-        console.assert(getComplexityPassword('d!') === 3, 'd! сложность  3');
-        console.assert(getComplexityPassword('fgh') === 3, 'fgh сложность 3');
-        console.assert(getComplexityPassword('12f') === 4, '12f сложность 4');
-        console.assert(getComplexityPassword('1') === 1, '1 = 1');
-
+        // todo используй объект с паролями и сложностями и цикл для текстов, чтобы не повторяться, в тестах это называется data provider
+        // нужно заменить существующий спосок тестов на цикл for in по объекту с паролями, внутри цикла будет один console.assert
+        // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
+        let data_provider = {
+			'Qwerty123%': 13
+        };
+        console.assert(getComplexityPassword('Qwerty123%') === 13,  'Qwerty123% сложность 13');
+        console.assert(getComplexityPassword('Q') === 2,            'Q сложность 2');
+        console.assert(getComplexityPassword('wE') === 3,           'wE сложность 3');
+        console.assert(getComplexityPassword('d!') === 3,           'd! сложность  3');
+        console.assert(getComplexityPassword('fgh') === 3,          'fgh сложность 3');
+        console.assert(getComplexityPassword('12f') === 4,          '12f сложность 4');
+        console.assert(getComplexityPassword('1') === 1,            '1 сложность 1');
     </script>
 </body>
 </html>
