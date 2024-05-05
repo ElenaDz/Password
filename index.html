@@ -18,14 +18,15 @@
                     <span>
                         Введите пароль:
                     </span>
-                    <!-- fixme complexity_min и complexity_middle могут быть не указаны, на этот случай нужно задать значния по-умолчанию -->
+                    <!-- fixme complexity_min и complexity_middle могут быть не указаны, на этот случай нужно задать значния по-умолчанию ok-->
                     <input
                         required
                         type="password"
                         name="pass"
                         data-complexity_check="1"
-                        data-complexity_min="2"
-                        data-complexity_middle="12">
+                        data-complexity_min="5"
+                        data-complexity_middle="13"
+                    >
                 </label>
                 <button type="submit">
                     Отправить
@@ -41,39 +42,64 @@
     <script>
         let $inputsPassword = $('Input[data-complexity_check="1"]');
 
-        // todo размести тесты рядом с этой функцией, чтобы не потяреляись, вдруг будешь выносить фукнцию в другой файл, про тексты точно забудешь
+        // todo размести тесты рядом с этой функцией, чтобы не потяреляись, вдруг будешь выносить фукнцию в другой файл, про тексты точно забудешь ok
         function getComplexityPassword(password)
         {
             let balls = password.length;
+            const regexUpperCase = /([A-Z])/g;
+            const regexSymbol = /\W/g;
+            const regexLetters = /[A-Za-z]/g;
+            const regexNumber = /[0-9]/g;
+            // fixme большие буквы в программировании называет верхний регист по английске upper case, переименную ok
 
-            // fixme большие буквы в программировании называет верхний регист по английске upper case, переименную
-            const regexCapitalLetter = /([A-Z])/g;
-            if (password.match(regexCapitalLetter) !== null) {
+            if (password.match(regexUpperCase) !== null) {
                 balls = balls + 1;
             }
 
-            const regexSymbol = /\W/g;
             if (password.match(regexSymbol) !== null) {
                 balls = balls + 1;
             }
 
-            const regexLetters = /[A-Za-z]/g;
-            const regexNumber = /[0-9]/g;
             if (password.match(regexLetters) !== null && password.match(regexNumber) !== null) {
                 balls = balls + 1;
             }
+
             return balls;
+        }
+        // todo используй объект с паролями и сложностями и цикл для текстов, чтобы не повторяться, в тестах это называется data provider ok
+        // нужно заменить существующий спосок тестов на цикл for in по объекту с паролями, внутри цикла будет один console.assert
+        // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
+        let data_provider = {
+            'Qwerty123%': 13, 'Q': 2, 'wE': 3, 'd!': 3,'fgh': 3,'12f': 4,'1': 1
+        };
+
+        for (const password in data_provider) {
+            console.assert(getComplexityPassword(password) === data_provider[password], `Некорректный пароль: ${password} сложность ${data_provider[password]}`)
         }
 
         $inputsPassword.each((index, element) =>
         {
             let $input = $(element);
-            let complexityMin = $input.data('complexity_min');
-            let complexityMiddle = $input.data('complexity_middle');
+            let complexityMin = $input.data('complexity_min') ?? 8;
+            let complexityMiddle = $input.data('complexity_middle') ?? 12;
+            let complexityMax = complexityMiddle + 10;
+
+            if (complexityMin === ''){
+                complexityMin = 8;
+            }
+
+            if (complexityMiddle === ''){
+                complexityMiddle = 12;
+            }
+
+            if (complexityMiddle < complexityMin){
+                alert('Ошибка: Средний уровень сложности задан меньше минимального')
+            }
+
             $input
                 .parent()
-                // fixme max не может быть фиксированным он должен рачитываться в зависимости от high например high + 10
-                .append(`<meter min="0" low=${complexityMin} high=${complexityMiddle} max="25"></meter>`);
+                // fixme max не может быть фиксированным он должен рачитываться в зависимости от high например high + 10 ok
+                .append(`<meter min="0" low=${complexityMin} high=${complexityMiddle} max=${complexityMax}></meter>`);
 
             // если блок кода с объявлением переменных и констант соседсвует с другим кодом его нужно отделать пустыми строками, как здесь, исправь в других местах
             let $meter = $input.parent().find('meter');
@@ -82,11 +108,13 @@
 
             $input.on('keyup', (event) =>
             {
-                inputPassword = event.currentTarget;
                 let inputVal = $input.val();
+
+                inputPassword = event.currentTarget;
                 $meter.css({visibility: 'visible'});
                 balls = getComplexityPassword(inputVal);
                 $meter.val(String(balls));
+
                 if (balls < $meter.attr('low')) {
                     inputPassword.setCustomValidity('Слабый пароль');
                 } else {
@@ -94,20 +122,6 @@
                 }
             });
         });
-
-        // todo используй объект с паролями и сложностями и цикл для текстов, чтобы не повторяться, в тестах это называется data provider
-        // нужно заменить существующий спосок тестов на цикл for in по объекту с паролями, внутри цикла будет один console.assert
-        // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
-        let data_provider = {
-			'Qwerty123%': 13
-        };
-        console.assert(getComplexityPassword('Qwerty123%') === 13,  'Qwerty123% сложность 13');
-        console.assert(getComplexityPassword('Q') === 2,            'Q сложность 2');
-        console.assert(getComplexityPassword('wE') === 3,           'wE сложность 3');
-        console.assert(getComplexityPassword('d!') === 3,           'd! сложность  3');
-        console.assert(getComplexityPassword('fgh') === 3,          'fgh сложность 3');
-        console.assert(getComplexityPassword('12f') === 4,          '12f сложность 4');
-        console.assert(getComplexityPassword('1') === 1,            '1 сложность 1');
     </script>
 </body>
 </html>
