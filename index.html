@@ -12,18 +12,18 @@
 </head>
 <body>
     <div class="box">
+        <!-- fixme если нажать отправить, то пароль отправляется через get параметр в url, другими словами его видно в url это не безопасно, используй метод отправки формы post -->
         <form>
             <div class="password_block">
                 <label>
                     <span>
                         Введите пароль:
                     </span>
-                    <!-- fixme complexity_min и complexity_middle могут быть не указаны, на этот случай нужно задать значния по-умолчанию ok-->
+                    <!-- fixme не коректно работает метр, пароль 11111 показывает зеленый цвет-->
                     <input
                         required
                         type="password"
                         name="pass"
-                        data-complexity_check="1"
                         data-complexity_min="5"
                         data-complexity_middle="13"
                     >
@@ -42,15 +42,14 @@
     <script>
         let $inputsPassword = $('Input[data-complexity_check="1"]');
 
-        // todo размести тесты рядом с этой функцией, чтобы не потяреляись, вдруг будешь выносить фукнцию в другой файл, про тексты точно забудешь ok
         function getComplexityPassword(password)
         {
+			// fixme balls и complexity_password это одно и тоже, недопустимо использовать разные слова для одного и того же
             let balls = password.length;
             const regexUpperCase = /([A-Z])/g;
             const regexSymbol = /\W/g;
             const regexLetters = /[A-Za-z]/g;
             const regexNumber = /[0-9]/g;
-            // fixme большие буквы в программировании называет верхний регист по английске upper case, переименную ok
 
             if (password.match(regexUpperCase) !== null) {
                 balls = balls + 1;
@@ -66,9 +65,8 @@
 
             return balls;
         }
-        // todo используй объект с паролями и сложностями и цикл для текстов, чтобы не повторяться, в тестах это называется data provider ok
-        // нужно заменить существующий спосок тестов на цикл for in по объекту с паролями, внутри цикла будет один console.assert
-        // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in
+
+        // fixme в объекте какждое свойство должно быть на своей отдельной строке
         let data_provider = {
             'Qwerty123%': 13, 'Q': 2, 'wE': 3, 'd!': 3,'fgh': 3,'12f': 4,'1': 1
         };
@@ -80,28 +78,28 @@
         $inputsPassword.each((index, element) =>
         {
             let $input = $(element);
+            // fixme что за символ ?? не знаю такого, мой Phpstorm такого тоже не знает, замени на что то изветсное мне и моему phpstorm
             let complexityMin = $input.data('complexity_min') ?? 8;
             let complexityMiddle = $input.data('complexity_middle') ?? 12;
             let complexityMax = complexityMiddle + 10;
 
-            if (complexityMin === ''){
+            if (complexityMin === '') {
                 complexityMin = 8;
             }
 
-            if (complexityMiddle === ''){
+            if (complexityMiddle === '') {
                 complexityMiddle = 12;
             }
 
-            if (complexityMiddle < complexityMin){
+            if (complexityMiddle < complexityMin) {
+            	// fixme слишком "агресивные" способ показать ошибку, достаточно console.error()
                 alert('Ошибка: Средний уровень сложности задан меньше минимального')
             }
 
             $input
                 .parent()
-                // fixme max не может быть фиксированным он должен рачитываться в зависимости от high например high + 10 ok
                 .append(`<meter min="0" low=${complexityMin} high=${complexityMiddle} max=${complexityMax}></meter>`);
 
-            // если блок кода с объявлением переменных и констант соседсвует с другим кодом его нужно отделать пустыми строками, как здесь, исправь в других местах
             let $meter = $input.parent().find('meter');
             let balls = 0;
             let inputPassword = null;
@@ -112,6 +110,7 @@
 
                 inputPassword = event.currentTarget;
                 $meter.css({visibility: 'visible'});
+                // fixme balls и complexity_password это одно и тоже, недопустимо использовать разные слова для одного и того же
                 balls = getComplexityPassword(inputVal);
                 $meter.val(String(balls));
 
