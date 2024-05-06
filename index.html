@@ -12,20 +12,19 @@
 </head>
 <body>
     <div class="box">
-        <!-- fixme если нажать отправить, то пароль отправляется через get параметр в url, другими словами его видно в url это не безопасно, используй метод отправки формы post -->
-        <form>
+        <!-- fixme если нажать отправить, то пароль отправляется через get параметр в url, другими словами его видно в url это не безопасно, используй метод отправки формы post ok -->
+        <form method="post">
             <div class="password_block">
                 <label>
                     <span>
                         Введите пароль:
                     </span>
-                    <!-- fixme не коректно работает метр, пароль 11111 показывает зеленый цвет-->
+                    <!-- fixme не коректно работает метр, пароль 11111 показывает зеленый цвет ok-->
                     <input
                         required
                         type="password"
                         name="pass"
-                        data-complexity_min="5"
-                        data-complexity_middle="13"
+                        data-complexity_check="1"
                     >
                 </label>
                 <button type="submit">
@@ -44,31 +43,37 @@
 
         function getComplexityPassword(password)
         {
-			// fixme balls и complexity_password это одно и тоже, недопустимо использовать разные слова для одного и того же
-            let balls = password.length;
+			// fixme balls и complexity_password это одно и тоже, недопустимо использовать разные слова для одного и того же ok
+            let complexity = password.length;
             const regexUpperCase = /([A-Z])/g;
             const regexSymbol = /\W/g;
             const regexLetters = /[A-Za-z]/g;
             const regexNumber = /[0-9]/g;
 
             if (password.match(regexUpperCase) !== null) {
-                balls = balls + 1;
+                complexity = complexity + 1;
             }
 
             if (password.match(regexSymbol) !== null) {
-                balls = balls + 1;
+                complexity = complexity + 1;
             }
 
             if (password.match(regexLetters) !== null && password.match(regexNumber) !== null) {
-                balls = balls + 1;
+                complexity = complexity + 1;
             }
 
-            return balls;
+            return complexity;
         }
 
-        // fixme в объекте какждое свойство должно быть на своей отдельной строке
+        // fixme в объекте какждое свойство должно быть на своей отдельной строке  ok
         let data_provider = {
-            'Qwerty123%': 13, 'Q': 2, 'wE': 3, 'd!': 3,'fgh': 3,'12f': 4,'1': 1
+            'Qwerty123%': 13,
+            'Q': 2,
+            'wE': 3,
+            'd!': 3,
+            'fgh': 3,
+            '12f': 4,
+            '1': 1
         };
 
         for (const password in data_provider) {
@@ -78,10 +83,10 @@
         $inputsPassword.each((index, element) =>
         {
             let $input = $(element);
-            // fixme что за символ ?? не знаю такого, мой Phpstorm такого тоже не знает, замени на что то изветсное мне и моему phpstorm
-            let complexityMin = $input.data('complexity_min') ?? 8;
-            let complexityMiddle = $input.data('complexity_middle') ?? 12;
-            let complexityMax = complexityMiddle + 10;
+            // fixme что за символ ?? не знаю такого, мой Phpstorm такого тоже не знает, замени на что то изветсное мне и моему phpstorm ok
+            let complexityMin = $input.data('complexity_min') || 8;
+            let complexityMiddle = $input.data('complexity_middle') || 12;
+            let complexityMax = complexityMiddle + 20;
 
             if (complexityMin === '') {
                 complexityMin = 8;
@@ -92,8 +97,8 @@
             }
 
             if (complexityMiddle < complexityMin) {
-            	// fixme слишком "агресивные" способ показать ошибку, достаточно console.error()
-                alert('Ошибка: Средний уровень сложности задан меньше минимального')
+            	// fixme слишком "агресивные" способ показать ошибку, достаточно ok
+                 console.error('Ошибка: Средний уровень сложности задан меньше минимального')
             }
 
             $input
@@ -101,7 +106,7 @@
                 .append(`<meter min="0" low=${complexityMin} high=${complexityMiddle} max=${complexityMax}></meter>`);
 
             let $meter = $input.parent().find('meter');
-            let balls = 0;
+            let complexity = 0;
             let inputPassword = null;
 
             $input.on('keyup', (event) =>
@@ -110,11 +115,11 @@
 
                 inputPassword = event.currentTarget;
                 $meter.css({visibility: 'visible'});
-                // fixme balls и complexity_password это одно и тоже, недопустимо использовать разные слова для одного и того же
-                balls = getComplexityPassword(inputVal);
-                $meter.val(String(balls));
+                // fixme balls и complexity_password это одно и тоже, недопустимо использовать разные слова для одного и того же ok
+                complexity = getComplexityPassword(inputVal);
+                $meter.val(String(complexity));
 
-                if (balls < $meter.attr('low')) {
+                if (complexity < $meter.attr('low')) {
                     inputPassword.setCustomValidity('Слабый пароль');
                 } else {
                     inputPassword.setCustomValidity('');
