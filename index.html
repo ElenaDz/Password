@@ -12,14 +12,12 @@
 </head>
 <body>
     <div class="box">
-        <!-- fixme если нажать отправить, то пароль отправляется через get параметр в url, другими словами его видно в url это не безопасно, используй метод отправки формы post ok -->
         <form method="post">
             <div class="password_block">
                 <label>
                     <span>
                         Введите пароль:
                     </span>
-                    <!-- fixme не коректно работает метр, пароль 11111 показывает зеленый цвет ok-->
                     <input
                         required
                         type="password"
@@ -43,7 +41,6 @@
 
         function getComplexityPassword(password)
         {
-			// fixme balls и complexity_password это одно и тоже, недопустимо использовать разные слова для одного и того же ok
             let complexity = password.length;
             const regexUpperCase = /([A-Z])/g;
             const regexSymbol = /\W/g;
@@ -65,7 +62,6 @@
             return complexity;
         }
 
-        // fixme в объекте какждое свойство должно быть на своей отдельной строке  ok
         let data_provider = {
             'Qwerty123%': 13,
             'Q': 2,
@@ -83,7 +79,6 @@
         $inputsPassword.each((index, element) =>
         {
             let $input = $(element);
-            // fixme что за символ ?? не знаю такого, мой Phpstorm такого тоже не знает, замени на что то изветсное мне и моему phpstorm ok
             let complexityMin = $input.data('complexity_min') || 8;
             let complexityMiddle = $input.data('complexity_middle') || 12;
             let complexityMax = complexityMiddle + 20;
@@ -97,8 +92,8 @@
             }
 
             if (complexityMiddle < complexityMin) {
-            	// fixme слишком "агресивные" способ показать ошибку, достаточно ok
-                 console.error('Ошибка: Средний уровень сложности задан меньше минимального')
+            	// fixme плохое сообщение об ошибке, хорошее выглядело бы так 'Средний уровень сложности "7" меньше минимального "8"'
+                 console.error('Средний уровень сложности задан меньше минимального')
             }
 
             $input
@@ -115,7 +110,6 @@
 
                 inputPassword = event.currentTarget;
                 $meter.css({visibility: 'visible'});
-                // fixme balls и complexity_password это одно и тоже, недопустимо использовать разные слова для одного и того же ok
                 complexity = getComplexityPassword(inputVal);
                 $meter.val(String(complexity));
 
