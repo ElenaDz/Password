@@ -23,6 +23,8 @@
                         type="password"
                         name="pass"
                         data-complexity_check="1"
+                        data-complexity_min="6"
+                        data-complexity_middle="1"
                     >
                 </label>
                 <button type="submit">
@@ -92,8 +94,8 @@
             }
 
             if (complexityMiddle < complexityMin) {
-            	// fixme плохое сообщение об ошибке, хорошее выглядело бы так 'Средний уровень сложности "7" меньше минимального "8"'
-                 console.error('Средний уровень сложности задан меньше минимального')
+            	// fixme плохое сообщение об ошибке, хорошее выглядело бы так 'Средний уровень сложности "7" меньше минимального "8"' ok
+                 console.error(`Средний уровень сложности ${complexityMiddle} меньше минимального ${complexityMin}`)
             }
 
             $input
